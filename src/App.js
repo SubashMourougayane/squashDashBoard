@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 class App extends Component {
+  state={
+    card:[]
+  }
   componentDidMount() {
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "http://54.159.197.120:3000/squashStore", false);
     xhttp.send();
     var JS = JSON.parse(xhttp.responseText);
+    this.setState({
+      card:JS
+    })
+    console.log("js",JS);
     for (var i = 0; i < Object.keys(JS).length; i++) {
       console.log(i, JS[i].mname);
       // indha JS variable la irukuradhu APP LIST DIV la list aganum
     }
+    console.log("set-->>",this.state.card);
 
   }
   createBanner=()=>{
@@ -49,30 +57,35 @@ class App extends Component {
   }
 
   render() {
-
+    var list = this.state.card.map(card=>{
+      return(<li>{card.mname}</li>)
+    });
+    console.log("list",list);
 
     return (
       <div className="App">
         <div className="flex-container">
-          <div className="AddApp">
+          <div className="AddApp div">
             <h3>Add Apps</h3>
             <input id="mimage" type="text" placeholder="Image URL" className="text-view" /><br />
             <input id="mname" type="text" placeholder="App Name" className="text-view" /><br />
             <input id="murl" type="text" placeholder="App Link" className="text-view" /><br /><br />
             <input type="button" value="Create App" className="button" onClick={this.createApp} />
           </div>
-          <div className="ListApp">
+          <div className="ListApp div">
             <h3>List Apps</h3>
-
+            <ul>
+              {list}
+            </ul>
 
           </div>
-          <div className="DelApp">
+          <div className="DelApp div">
             <h3>Delete Apps</h3>
             <input type="text" id="mname-del" placeholder="App Name" className="text-view" /><br /><br />
             <input type="button" value="Delete App" className="button" onClick={this.deleteApp} />
 
           </div>
-          <div className="Banner">
+          <div className="Banner div">
             <h3>Banner</h3>
             <input id="ban-image" type="text" placeholder="Banner Image URL" className="text-view" /><br />
             <input id="ban-url" type="text" placeholder="Banner Redirect URL" className="text-view" /><br />
