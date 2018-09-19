@@ -64,6 +64,9 @@ class App extends Component {
 
     return (
       <div className="App">
+      <nav className="nav-container">
+        <span>Squash Dashboard</span>
+      </nav>
         <div className="flex-container">
           <div className="AddApp div">
             <h3>Add Apps</h3>
@@ -74,7 +77,7 @@ class App extends Component {
           </div>
           <div className="ListApp div">
             <h3>List Apps</h3>
-            <ul>
+            <ul className="scroll">
               {list}
             </ul>
 
