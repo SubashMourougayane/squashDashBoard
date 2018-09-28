@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import './App.css';
 class App extends Component {
-  state = {
-    appcard: [],
-    bannercard: []
+  constructor(props) {
+    super(props);
+    this.state = {
+      URL:"http://54.159.197.120:3000/",
+      appcard: [],
+      bannercard: []
+    }
   }
+ 
   componentDidMount() {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "http://54.159.197.120:3000/squashStore", false);
+    xhttp.open("GET", this.state.URL+"store", false);
     xhttp.send();
     var JS = JSON.parse(xhttp.responseText);
+    console.log(xhttp.responseText);
 
     var xhttp1 = new XMLHttpRequest();
-    xhttp1.open("GET", "http://54.159.197.120:3000/listBanners", false);
+    xhttp1.open("GET", this.state.URL+"listBanners", false);
     xhttp1.send();
     var JS1 = JSON.parse(xhttp1.responseText);
     this.setState({
@@ -25,7 +31,7 @@ class App extends Component {
   }
 
   createApp = () => {
-    var req = new Request("http://54.159.197.120:3000/updateStore", {
+    var req = new Request(this.state.URL+"updateStore", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify({ mimage: document.getElementById('mimage').value, mname: document.getElementById('mname').value, murl: document.getElementById('murl').value, mcat: document.getElementById('mcat').value })
@@ -41,7 +47,7 @@ class App extends Component {
     });
   }
   deleteApp = () => {
-    var req = new Request("http://54.159.197.120:3000/deleteApp", {
+    var req = new Request(this.state.URL+"deleteApp", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify({ mname: document.getElementById('mname-del').value })
@@ -55,7 +61,7 @@ class App extends Component {
     });
   }
   createBanner = () => {
-    var req = new Request("http://54.159.197.120:3000/createBanner", {
+    var req = new Request(this.state.URL+"createBanner", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify({ bimg: document.getElementById('ban-image').value, burl: document.getElementById('ban-url').value, btype: document.getElementById('ban-type').value })
@@ -70,7 +76,7 @@ class App extends Component {
     });
   }
   deleteBanner = () => {
-    var req = new Request("http://54.159.197.120:3000/deleteBanner", {
+    var req = new Request(this.state.URL+"deleteBanner", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       body: JSON.stringify({ bimg: document.getElementById('del-image').value })
@@ -79,6 +85,22 @@ class App extends Component {
       console.log("RESSSS", res);
       if (res.status === 200) {
         window.location.reload();
+      }
+
+    });
+  }
+
+  pushGCM=()=>{
+    var req = new Request(this.state.URL+"sendNotification", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ gcmimg: document.getElementById('gcm-image').value,
+        gcmurl:document.getElementById('gcm-url').value,gcmtitle:document.getElementById('gcm-title').value,gcmproduct:document.getElementById('gcm-product').value})
+    })
+    fetch(req).then(function (res) {
+      console.log("RESSSS", res);
+      if (res.status === 200) {
+        console.log("SUCCESS");
       }
 
     });
@@ -143,7 +165,15 @@ class App extends Component {
             <input id="del-image" type="text" placeholder="Banner Image URL" className="text-view" /><br />
             <input type="button" value="Delete Banner" className="button" onClick={this.deleteBanner} />
           </div>
+          <div className="Banner div">
+            <h3>GCM</h3>
+            <input id="gcm-title" type="text" placeholder="GCM Title" className="text-view" /><br />
+            <input id="gcm-image" type="text" placeholder="GCM Image URL" className="text-view" /><br />
+            <input id="gcm-url" type="text" placeholder="GCM Redirection URL" className="text-view" /><br />
+            <input id="gcm-product" type="text" placeholder="GCM Product" className="text-view" /><br />
 
+            <input type="button" value="Push GCM" className="button" onClick={this.pushGCM} />
+          </div>
         </div>
       </div>
     );
