@@ -55,8 +55,7 @@ class App extends Component {
     fetch(req).then(function (res) {
       console.log("RESSSS", res);
       if (res.status === 200) {
-        window.location.reload();
-        //inga edha tick symbol pop agura mari vai da.. like success message
+        // window.location.reload();
       }
     });
   }
